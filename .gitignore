@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+.env
+.env.*
+*.log
+.quick/
+HACKDAY-RUN-ANALYSIS.md
+promo-video/out/
+promo-video/node_modules/
+**/seq/
+*.mp4
+*.jpeg
+HACKDAY.md
+hackday-agent-playbook.md

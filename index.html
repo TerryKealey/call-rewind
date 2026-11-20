@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b1f4d" />
+    <title>Call Rewind | SE closeout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="/client/quick.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
+    <header class="site-header">
+      <a class="brand" href="#top">
+        <span class="brand-mark">CALL</span>
+        <strong>REWIND</strong>
+      </a>
+      <p class="tagline">Post-call closeout for SEs — Connect CRM once in this browser.</p>
+      <div class="who-row">
+        <span class="who" id="whoAmI">Signing in…</span>
+        <a class="button button-demo-header js-open-demo" href="https://the-button.flint.shopify.io/?dealId=321741-demo" target="_blank" rel="noopener noreferrer">Need a demo? Hit the button!</a>
+        <button type="button" class="button button-ghost button-tiny" id="connectCrmBtn">Connect CRM</button>
+        <span class="crm-status" id="crmStatus" hidden></span>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <h1>Be kind. <em>Rewind the call.</em></h1>
+        <p>Paste a Vault deal URL to pull the CRM meeting transcript, then get next steps, a follow-up email, next-meeting prep, and — when a platform gap shows up — a copy-ready <strong>@Scout</strong> draft. Drive/Calendar is the fallback if CRM has nothing.</p>
+        <p class="demo-cta">
+          <a class="button button-primary js-open-demo" href="https://the-button.flint.shopify.io/?dealId=321741-demo" target="_blank" rel="noopener noreferrer">Need a demo? Hit the button!</a>
+        </p>
+      </section>
+
+      <section class="workspace" id="workspace">
+        <form class="intake" id="rewindForm">
+          <div class="field-row">
+            <label class="field">
+              <span>Vault deal URL or deal ID</span>
+              <input id="dealId" name="dealId" type="text" placeholder="Paste vault.shopify.io/crm/…/deals/…" autocomplete="off" />
+            </label>
+            <label class="field">
+              <span>Merchant name (optional)</span>
+              <input id="merchant" name="merchant" type="text" placeholder="Auto-filled from Vault URL; used for CRM search / Drive fallback" autocomplete="off" />
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Transcript (optional — leave blank to load from CRM)</span>
+            <textarea id="transcript" name="transcript" rows="10" placeholder="Leave blank and Find in CRM, or paste a transcript."></textarea>
+          </label>
+
+          <div class="actions">
+            <button class="button button-primary" type="submit" id="runBtn">Rewind call</button>
+            <button class="button button-secondary" type="button" id="lookupBtn">Find in CRM</button>
+            <button class="button button-ghost" type="button" id="clearBtn">Clear</button>
+            <a class="button button-ghost" href="demo.html?dealId=321741-demo" title="Local fictional opportunity with full example cards">Local demo</a>
+          </div>
+          <p class="hint" id="status">Paste a Vault deal URL, then Find in CRM — or paste a transcript.</p>
+          <div class="connect-panel" id="connectPanel" hidden>
+            <h3>Connect CRM</h3>
+            <p class="connect-warn" id="httpsCrmWarn" hidden>
+              You’re on the <strong>HTTPS</strong> Quick site — CRM Connect can’t use WARP from here.
+              Open <a href="http://call-rewind.quick.localhost:1337/">http://call-rewind.quick.localhost:1337/</a> instead.
+            </p>
+            <p>
+              CRM needs (1) this page on <strong>local HTTP</strong> preview, (2) Cloudflare <strong>WARP</strong>,
+              (3) <code>node scripts/crm-proxy.mjs</code>, (4) your Vault API token (the UUID on api_token <em>is</em> the token).
+            </p>
+            <ol>
+              <li>Open <a href="http://call-rewind.quick.localhost:1337/">local preview</a> (not call-rewind.quick.shopify.io).</li>
+              <li>Enable <strong>Cloudflare WARP</strong>.</li>
+              <li>Terminal: <code>node scripts/crm-proxy.mjs</code> (leave running).</li>
+              <li>
+                <button type="button" class="button button-secondary" id="openVaultTokenBtn">Open Vault API token page</button>
+                — copy token (or <code>pbcopy &lt; ~/.cache/vault-crm-token</code>).
+              </li>
+              <li>Paste below → Save &amp; verify.</li>
+            </ol>
+            <label class="field">
+              <span>Vault API token</span>
+              <input id="crmTokenInput" type="password" autocomplete="off" spellcheck="false" placeholder="Paste token — stored only in this browser" />
+            </label>
+            <div class="actions">
+              <button type="button" class="button button-primary" id="saveCrmTokenBtn">Save &amp; verify</button>
+              <button type="button" class="button button-ghost" id="cancelConnectBtn">Cancel</button>
+              <button type="button" class="button button-ghost" id="disconnectCrmBtn" hidden>Disconnect</button>
+            </div>
+            <p class="hint" id="connectStatus"></p>
+          </div>
+          <p class="access-note" id="accessNote">
+            <strong>Primary:</strong> CRM as <em>you</em> via <strong>Connect CRM</strong> (Vault API token in this browser — same credential as Cursor CRM MCP).
+            Flow: deal → meetings → transcript. Drive/Calendar is automatic fallback. Help: <code>#crm-mcp</code>.
+          </p>
+          <p class="access-banner" id="accessBanner" hidden>
+            CRM needs Connect CRM once. Then retry Find in CRM.
+          </p>
+          <div class="match-list" id="matchList" hidden></div>
+        </form>
+
+        <aside class="source-card" id="sourceCard" hidden>
+          <h2>Source</h2>
+          <dl id="sourceMeta"></dl>
+        </aside>
+
+        <section class="cards" id="cards" hidden>
+          <article class="card" data-key="seNextSteps">
+            <header>
+              <h2>SE Next Steps</h2>
+              <button type="button" class="copy" data-copy="seNextSteps">Copy</button>
+            </header>
+            <pre class="body" id="outNextSteps"></pre>
+          </article>
+          <article class="card" data-key="followUpEmail">
+            <header>
+              <h2>Merchant follow-up</h2>
+              <button type="button" class="copy" data-copy="followUpEmail">Copy</button>
+            </header>
+            <pre class="body" id="outFollowUp"></pre>
+          </article>
+          <article class="card" data-key="nextMeetingPrep">
+            <header>
+              <h2>Next-meeting prep</h2>
+              <button type="button" class="copy" data-copy="nextMeetingPrep">Copy</button>
+            </header>
+            <pre class="body" id="outPrep"></pre>
+          </article>
+          <article class="card" data-key="productFeedback">
+            <header>
+              <h2>Product gap (summary)</h2>
+              <button type="button" class="copy" data-copy="productFeedback">Copy</button>
+            </header>
+            <pre class="body" id="outFeedback"></pre>
+          </article>
+          <article class="card card-scout" id="scoutCard" data-key="scoutMessage" hidden>
+            <header>
+              <h2>Scout message</h2>
+              <button type="button" class="copy" data-copy="scoutMessage">Copy for Scout</button>
+            </header>
+            <p class="scout-howto" id="scoutHowto">
+              Paste into a DM with Scout, or tag <code>@Scout</code> in the internal thread where the gap is discussed.
+              Review Want / Why / Product / Merchant before you confirm. Call Rewind never auto-posts.
+            </p>
+            <pre class="body" id="outScout"></pre>
+          </article>
+          <article class="card card-internal" id="scoutImpactCard" data-key="scoutImpactInternal" hidden>
+            <header>
+              <h2>Impact (chat only)</h2>
+              <button type="button" class="copy" data-copy="scoutImpactInternal">Copy</button>
+            </header>
+            <p class="scout-howto">Keep PBR / $ out of the Scout message. Share in chat only if you choose.</p>
+            <pre class="body" id="outScoutImpact"></pre>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>CALL REWIND</span>
+      <p>Companion Cursor skill: <code>call-rewind</code>. Drafts only — you paste into CRM / email / Scout. OneList is frozen; new gaps → Scout.</p>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

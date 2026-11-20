@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b1f4d" />
+    <title>Call Rewind · Local demo</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="demo.css" />
+  </head>
+  <body class="demo-page">
+    <a class="skip-link" href="#workspace">Skip to workspace</a>
+    <header class="site-header">
+      <a class="brand" href="demo.html">
+        <span class="brand-mark">CALL</span>
+        <strong>REWIND</strong>
+      </a>
+      <p class="tagline">Local demo · fictional opportunity · no CRM required</p>
+      <div class="who-row">
+        <span class="who">Northstar Ceramics · demo</span>
+        <a class="button button-demo-header js-open-button" href="https://the-button.flint.shopify.io/?dealId=321741-demo" target="_blank" rel="noopener noreferrer">Need a demo? Hit the button!</a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero hero-demo">
+        <p class="demo-kicker">Local demo</p>
+        <h1>Search the sample deal. <em>Everything populates.</em></h1>
+        <p class="hero-sub">
+          No CRM token. Enter the sample deal ID (or Northstar), hit Find deal — SE next steps, HTML follow-up, prep, and Scout draft fill in.
+        </p>
+        <p class="demo-cta">
+          <a class="button button-primary js-open-button" href="https://the-button.flint.shopify.io/?dealId=321741-demo" target="_blank" rel="noopener noreferrer">Need a demo? Hit the button!</a>
+        </p>
+      </section>
+
+      <section class="workspace" id="workspace">
+        <form class="intake" id="demoForm">
+          <div class="field-row">
+            <label class="field">
+              <span>Deal ID</span>
+              <input
+                id="dealId"
+                name="dealId"
+                type="text"
+                autocomplete="off"
+                placeholder="321741-demo"
+              />
+            </label>
+            <label class="field">
+              <span>Merchant (optional)</span>
+              <input
+                id="merchant"
+                name="merchant"
+                type="text"
+                autocomplete="off"
+                placeholder="Northstar Ceramics"
+              />
+            </label>
+          </div>
+          <div class="actions">
+            <button class="button button-primary" type="submit" id="findDealBtn">Find deal</button>
+            <button class="button button-ghost" type="button" id="clearBtn">Clear</button>
+            <a class="button button-secondary" href="index.html?dealId=321741-demo&amp;merchant=Northstar%20Ceramics">Open live app</a>
+          </div>
+          <p class="hint" id="status">Sample deal: <code>321741-demo</code> · merchant: Northstar Ceramics</p>
+        </form>
+
+        <aside class="source-card" id="sourceCard" hidden>
+          <h2>Source</h2>
+          <dl id="sourceMeta"></dl>
+        </aside>
+
+        <section class="cards" id="cards" hidden>
+          <article class="card" data-key="seNextSteps">
+            <header>
+              <h2>SE Next Steps</h2>
+              <button type="button" class="copy" data-copy="seNextSteps">Copy</button>
+            </header>
+            <pre class="body" id="outNextSteps"></pre>
+          </article>
+
+          <article class="card card-email" data-key="followUpEmail">
+            <header>
+              <h2>Merchant follow-up</h2>
+              <div class="header-actions">
+                <button type="button" class="copy" data-copy="followUpEmailHtml">Copy HTML</button>
+                <button type="button" class="copy" data-copy="followUpEmailText">Copy text</button>
+              </div>
+            </header>
+            <div class="email-chrome">
+              <div class="email-meta">
+                <div><span>To</span> jordan.lee@northstarceramics.example</div>
+                <div><span>Cc</span> alex.rivera@shopify.com</div>
+                <div><span>Subject</span> <strong id="emailSubject"></strong></div>
+              </div>
+              <iframe
+                id="emailPreview"
+                class="email-preview"
+                title="Merchant follow-up email preview"
+                sandbox=""
+              ></iframe>
+            </div>
+          </article>
+
+          <article class="card" data-key="nextMeetingPrep">
+            <header>
+              <h2>Next-meeting prep</h2>
+              <button type="button" class="copy" data-copy="nextMeetingPrep">Copy</button>
+            </header>
+            <pre class="body" id="outPrep"></pre>
+          </article>
+
+          <article class="card card-gap" data-key="productFeedback">
+            <header>
+              <h2>Product gap</h2>
+              <button type="button" class="copy" data-copy="productFeedback">Copy</button>
+            </header>
+            <p class="body body-prose" id="outFeedback"></p>
+            <div class="gap-actions">
+              <button type="button" class="button button-scout" id="submitScoutBtn">
+                Submit to Scout
+              </button>
+              <button type="button" class="button button-ghost" id="previewScoutBtn">
+                Preview Scout draft
+              </button>
+            </div>
+            <p class="hint" id="scoutSubmitStatus"></p>
+          </article>
+
+          <article class="card card-scout" id="scoutCard" hidden>
+            <header>
+              <h2>Scout message</h2>
+              <button type="button" class="copy" data-copy="scoutMessage">Copy for Scout</button>
+            </header>
+            <p class="scout-howto">
+              Demo only — Call Rewind never auto-posts. Submit copies the draft so you can paste into a Scout DM or <code>@Scout</code> thread.
+            </p>
+            <pre class="body" id="outScout"></pre>
+          </article>
+        </section>
+      </section>
+    </main>
+
+    <div class="toast" id="toast" hidden></div>
+
+    <footer class="site-footer">
+      <span>CALL REWIND · LOCAL DEMO</span>
+      <p>Fictional merchant. Examples only — not a real CRM deal.</p>
+    </footer>
+
+    <script type="module" src="demo.js"></script>
+  </body>
+</html>
